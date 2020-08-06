@@ -1,2 +1,9 @@
 server:
   port: 9090
+devservice:
+  keycloak:
+    jwkUrl: http://localhost:9001/auth/realms/central-registry/protocol/openid-connect/certs
+  gatewayservice:
+    baseUrl: http://localhost:8004
+    username: admin-user
+    password: welcome
