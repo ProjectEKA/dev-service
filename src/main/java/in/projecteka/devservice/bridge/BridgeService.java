@@ -14,6 +14,6 @@ public class BridgeService {
     public Mono<Void> updateBridgeUrl(String bridgeId, BridgeRequest bridgeRequest) {
         return serviceAuthenticationClient.getTokenFor(properties.getUsername(), properties.getPassword())
                 .flatMap(session -> serviceAuthenticationClient.updateBridgeWith(bridgeId,
-                        bridgeRequest.getUrl(), session.getAccessToken(), properties.getBaseUrl()));
+                        bridgeRequest.getUrl(), session.getTokenType() + " " + session.getAccessToken()));
     }
 }

@@ -2,6 +2,7 @@ package in.projecteka.devservice.clients;
 
 import in.projecteka.devservice.clients.model.ErrorRepresentation;
 import in.projecteka.devservice.clients.model.Error;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import static in.projecteka.devservice.clients.model.ErrorCode.BAD_REQUEST_FROM_GATEWAY;
@@ -11,6 +12,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+@Getter
 public class ClientError extends Throwable {
     private static final String CANNOT_PROCESS_REQUEST_TRY_LATER =
             "Cannot process the request at the moment, please try later.";

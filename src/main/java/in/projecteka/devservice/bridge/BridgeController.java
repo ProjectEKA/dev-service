@@ -4,6 +4,7 @@ import in.projecteka.devservice.bridge.model.BridgeRequest;
 import in.projecteka.devservice.common.Caller;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
 public class BridgeController {
     private final BridgeService bridgeService;
 
-    @PutMapping(PATH_BRIDGES)
+    @PatchMapping(PATH_BRIDGES)
     public Mono<Void> bridgeEntry(@RequestBody BridgeRequest bridgeRequest) {
         return ReactiveSecurityContextHolder.getContext()
                 .map(securityContext -> (Caller) securityContext.getAuthentication().getPrincipal())

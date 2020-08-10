@@ -42,16 +42,16 @@ public class ServiceAuthenticationClient {
                 .bodyToMono(Session.class);
     }
 
-    private BridgeRequest bridgeRequestWith(String id, String url) {
-        return new BridgeRequest(id, url);
+    private BridgeUpdateRequest bridgeRequestWith(String id, String url) {
+        return new BridgeUpdateRequest(id, url);
     }
 
-    public Mono<Void> updateBridgeWith(String bridgeId, String url, String token, String gatewayBaseUrl) {
-        return webClient.post()
-                .uri(gatewayBaseUrl + "/internal/bridges")
+    public Mono<Void> updateBridgeWith(String bridgeId, String url, String token) {
+        return webClient.put()
+                .uri("/internal/bridges")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, token)
-                .bodyValue(BodyInserters.fromValue(bridgeRequestWith(bridgeId, url)))
+                .body(Mono.just(bridgeRequestWith(bridgeId, url)), BridgeUpdateRequest.class)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.BAD_REQUEST.value(),
                         clientResponse -> Mono.error(ClientError.unprocessableEntity()))
@@ -63,14 +63,12 @@ public class ServiceAuthenticationClient {
                 .then();
     }
 
-    @AllArgsConstructor
     @Value
-    private static class BridgeRequest {
+    private static class BridgeUpdateRequest {
         String id;
         String url;
     }
 
-    @AllArgsConstructor
     @Value
     private static class SessionRequest {
         String username;

@@ -26,8 +26,10 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import static in.projecteka.devservice.clients.ClientError.unAuthorized;
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
 import static org.springframework.util.StringUtils.hasText;
+import static reactor.core.publisher.Mono.error;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -44,7 +46,8 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .logout().disable()
                 .authorizeExchange()
-                .pathMatchers(PATH_BRIDGES).permitAll()
+                .pathMatchers("/**")
+                .authenticated()
                 .and()
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(securityContextRepository)
@@ -86,7 +89,7 @@ public class SecurityConfiguration {
             if (!hasText(token)) {
                 return Mono.empty();
             }
-            return check(token);
+            return check(token).switchIfEmpty(error(unAuthorized()));
         }
 
         private Mono<SecurityContext> check(String token) {

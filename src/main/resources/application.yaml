@@ -1,0 +1,9 @@
+server:
+  port: 9090
+devservice:
+  keycloak:
+    jwkUrl: ${KEY_CLOAK_JWK_URL}
+  gatewayservice:
+    baseUrl: ${GATEWAY_BASE_URL}
+    username: ${GATEWAY_ADMIN_USER}
+    password: ${GATEWAY_ADMIN_PASSWORD}
