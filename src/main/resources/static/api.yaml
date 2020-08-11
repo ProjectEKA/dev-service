@@ -9,7 +9,7 @@ tags:
   - name: bridge
 paths:
   /bridges:
-    put:
+    patch:
       tags:
         - bridge
       description: This API is meant to update bridge url.
