@@ -19,7 +19,7 @@ import static reactor.core.publisher.Mono.just;
 public class HeartbeatController {
 
     @GetMapping(PATH_HEARTBEAT)
-    public Mono<ResponseEntity<HeartbeatResponse>> getProvidersByName() {
+    public Mono<ResponseEntity<HeartbeatResponse>> heartbeat() {
         var heartbeatResponse = HeartbeatResponse.builder().timeStamp(now(UTC)).status(UP).build();
         return just(new ResponseEntity<>(heartbeatResponse, OK));
     }
