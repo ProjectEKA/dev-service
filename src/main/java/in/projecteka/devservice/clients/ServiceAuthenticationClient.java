@@ -70,13 +70,12 @@ public class ServiceAuthenticationClient {
         return new BridgeServiceRequest(id, name, type, active);
     }
 
-    public Mono<Void> upsertBridgeServiceEntry(String bridgeId,
-                                               String id, String name, ServiceType type, boolean active,
-                                               Session session,
-                                               String gatewayBaseUrl
+    public Mono<Void> upsertBridgeServiceEntry(String bridgeId, String id,
+                                               String name, ServiceType type,
+                                               boolean active, Session session
     ) {
         return webClient.put()
-                .uri(gatewayBaseUrl + format("/internal/bridges/%s/services", bridgeId))
+                .uri(format("/internal/bridges/%s/services", bridgeId))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, format("%s %s", session.getTokenType(), session.getAccessToken()))
                 .body(Mono.just(List.of(bridgeServiceRequest(id, name, type, active))), BridgeServiceRequest.class)

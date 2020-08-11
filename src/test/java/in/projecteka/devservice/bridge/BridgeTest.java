@@ -1,5 +1,8 @@
 package in.projecteka.devservice.bridge;
 
+import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
+import in.projecteka.devservice.bridge.model.OrganizationDetails;
+import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,12 +27,19 @@ public class BridgeTest {
     @Mock
     GatewayServiceProperties gatewayServiceProperties;
 
+    @Mock
+    ClientRegistryClient clientRegistryClient;
+
     private BridgeService bridgeService;
 
     @BeforeEach
     void init() {
         MockitoAnnotations.initMocks(this);
-        bridgeService = Mockito.spy(new BridgeService(serviceAuthenticationClient, gatewayServiceProperties));
+        bridgeService = Mockito.spy(new BridgeService(
+                serviceAuthenticationClient,
+                clientRegistryClient,
+                gatewayServiceProperties
+        ));
     }
     @Test
     void shouldUpdateBridgeUrl() {
@@ -53,5 +63,36 @@ public class BridgeTest {
         verify(serviceAuthenticationClient).updateBridgeWith(bridgeId,
                 bridgeRequest.getUrl(),
                 session.getTokenType() + " " + session.getAccessToken());
+    }
+
+    @Test
+    void shouldUpdateBridgeServiceEntry() {
+        var bridgeId = string();
+        var username = string();
+        var password = string();
+        var session = session().build();
+        var request = BridgeServiceRequest.builder().build();
+        var orgDetails = OrganizationDetails.builder()
+                .id(bridgeId)
+                .name(request.getName())
+                .city(request.getCity())
+                .orgAlias(request.getAlias()).build();
+
+        when(gatewayServiceProperties.getUsername()).thenReturn(username);
+        when(gatewayServiceProperties.getPassword()).thenReturn(password);
+        when(serviceAuthenticationClient.getTokenFor(username, password)).thenReturn(just(session));
+        when(serviceAuthenticationClient.upsertBridgeServiceEntry(
+                bridgeId, request.getId(), request.getName(), request.getType(), request.isActive(), session
+        )).thenReturn(Mono.empty());
+        when(clientRegistryClient.addOrganization(orgDetails)).thenReturn(Mono.empty());
+
+        StepVerifier.create(bridgeService.upsertBridgeServiceEntry(bridgeId, request)).verifyComplete();
+
+        verify(serviceAuthenticationClient).getTokenFor(username, password);
+        verify(serviceAuthenticationClient).upsertBridgeServiceEntry(
+                bridgeId, request.getId(), request.getName(), request.getType(), request.isActive(), session
+        );
+        verify(clientRegistryClient).addOrganization(orgDetails);
+
     }
 }

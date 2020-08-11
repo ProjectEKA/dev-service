@@ -33,8 +33,7 @@ public class BridgeService {
 
                     return serviceAuthenticationClient.upsertBridgeServiceEntry(
                             bridgeId, request.getId(), request.getName(),
-                            request.getType(), request.isActive(),
-                            session, properties.getBaseUrl())
+                            request.getType(), request.isActive(), session)
                             .then(clientRegistryClient.addOrganization(orgDetails));
                 });
     }

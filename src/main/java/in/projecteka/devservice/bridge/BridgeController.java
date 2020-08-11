@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGE_SERVICES;
 
@@ -27,7 +29,7 @@ public class BridgeController {
     }
 
     @PutMapping(PATH_BRIDGE_SERVICES)
-    public Mono<Void> bridgeServiceEntry(@RequestBody BridgeServiceRequest bridgeServiceRequest) {
+    public Mono<Void> bridgeServiceEntry(@Valid @RequestBody BridgeServiceRequest bridgeServiceRequest) {
         return ReactiveSecurityContextHolder.getContext()
                 .map(securityContext -> (Caller) securityContext.getAuthentication().getPrincipal())
                 .flatMap(requester -> bridgeService.upsertBridgeServiceEntry(requester.getClientId(), bridgeServiceRequest));

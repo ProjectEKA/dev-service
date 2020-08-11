@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Value
@@ -13,10 +14,10 @@ public class BridgeServiceRequest {
     String id;
     @NotBlank(message = "hospital name can't be blank")
     String name;
-    @NotBlank(message = "hospital name alias can't be blank")
+    @NotNull(message = "hospital name alias can't be empty")
     List<String> alias;
     String city;
-    @NotBlank(message = "Service type can be either HIP or HIU")
+    @NotNull(message = "Service type can be either HIP or HIU")
     ServiceType type;
     boolean active;
 }
