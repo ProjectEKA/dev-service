@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: Dev Service
+  version: 1.0.0
+servers:
+  - url: https://ncg-dev.projecteka.in/dev-service
+    description: Dev
+tags:
+  - name: bridge
+paths:
+  /bridges:
+    patch:
+      tags:
+        - bridge
+      description: This API is meant to update bridge url.
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BridgeRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/BridgeRequest'
+      responses:
+        '200':
+          description: Bridge url updated successfully
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: Token received after successful verification of client.
+      schema:
+        type: string
+  schemas:
+    BridgeRequest:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+        - "url"
+      xml:
+        name: BridgeRequest
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+      xml:
+        name: ErrorResponse
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          enum: [1000, 10001]
+        message:
+          type: string
+      xml:
+        name: Error
