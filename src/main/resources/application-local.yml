@@ -7,3 +7,5 @@ devservice:
     baseUrl: http://localhost:8000
     username: admin-user
     password: welcome
+  clientregistry:
+    url: http://localhost:8080

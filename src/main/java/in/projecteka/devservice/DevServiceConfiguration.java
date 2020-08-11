@@ -3,7 +3,9 @@ package in.projecteka.devservice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.projecteka.devservice.bridge.BridgeService;
 import in.projecteka.devservice.clients.ClientErrorExceptionHandler;
+import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
+import in.projecteka.devservice.clients.properties.ClientRegistryProperties;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -48,9 +50,16 @@ public class DevServiceConfiguration {
     }
 
     @Bean
+    public ClientRegistryClient clientRegistryClient(@Qualifier("customBuilder") WebClient.Builder builder,
+                                                     ClientRegistryProperties clientRegistryProperties) {
+        return new ClientRegistryClient(builder, clientRegistryProperties.getUrl());
+    }
+
+    @Bean
     public BridgeService bridgeService(ServiceAuthenticationClient serviceAuthenticationClient,
-                                       GatewayServiceProperties gatewayServiceProperties) {
-        return new BridgeService(serviceAuthenticationClient, gatewayServiceProperties);
+                                       GatewayServiceProperties gatewayServiceProperties,
+                                       ClientRegistryClient clientRegistryClient) {
+        return new BridgeService(serviceAuthenticationClient, clientRegistryClient, gatewayServiceProperties);
     }
 
     @Bean

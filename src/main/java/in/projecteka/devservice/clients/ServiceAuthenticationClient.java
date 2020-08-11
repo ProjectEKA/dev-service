@@ -1,7 +1,7 @@
 package in.projecteka.devservice.clients;
 
+import in.projecteka.devservice.bridge.model.ServiceType;
 import in.projecteka.devservice.clients.model.Session;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 import java.util.Properties;
 
+import static java.lang.String.format;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -61,6 +64,40 @@ public class ServiceAuthenticationClient {
                         clientResponse -> Mono.error(ClientError.networkServiceCallFailed()))
                 .toBodilessEntity()
                 .then();
+    }
+
+    private BridgeServiceRequest bridgeServiceRequest(String id, String name, ServiceType type, boolean active) {
+        return new BridgeServiceRequest(id, name, type, active);
+    }
+
+    public Mono<Void> upsertBridgeServiceEntry(String bridgeId,
+                                               String id, String name, ServiceType type, boolean active,
+                                               Session session,
+                                               String gatewayBaseUrl
+    ) {
+        return webClient.put()
+                .uri(gatewayBaseUrl + format("/internal/bridges/%s/services", bridgeId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, format("%s %s", session.getTokenType(), session.getAccessToken()))
+                .body(Mono.just(List.of(bridgeServiceRequest(id, name, type, active))), BridgeServiceRequest.class)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.value() == HttpStatus.BAD_REQUEST.value(),
+                        clientResponse -> Mono.error(ClientError.unprocessableEntity()))
+                .onStatus(httpStatus -> httpStatus.value() == HttpStatus.UNAUTHORIZED.value(),
+                        clientResponse -> Mono.error(ClientError.unAuthorized()))
+                .onStatus(HttpStatus::is5xxServerError,
+                        clientResponse -> Mono.error(ClientError.networkServiceCallFailed()))
+                .toBodilessEntity()
+                .then();
+    }
+
+
+    @Value
+    private static class BridgeServiceRequest {
+        String id;
+        String name;
+        ServiceType type;
+        boolean active;
     }
 
     @Value
