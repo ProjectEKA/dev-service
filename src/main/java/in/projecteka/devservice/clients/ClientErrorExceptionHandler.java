@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.RequestPredicates;
@@ -18,6 +19,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public class ClientErrorExceptionHandler extends AbstractErrorWebExceptionHandler {
@@ -39,6 +41,10 @@ public class ClientErrorExceptionHandler extends AbstractErrorWebExceptionHandle
         // Default error response
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         BodyInserter<Object, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromValue(errorPropertiesMap);
+
+        if (error instanceof WebExchangeBindException) {
+            status = ((WebExchangeBindException) error).getStatus();
+        }
 
         if (error instanceof ClientError) {
             status = ((ClientError) error).getHttpStatus();
