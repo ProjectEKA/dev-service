@@ -22,7 +22,7 @@ public class BridgeController {
     private final BridgeService bridgeService;
 
     @PatchMapping(PATH_BRIDGES)
-    public Mono<Void> bridgeEntry(@RequestBody BridgeRequest bridgeRequest) {
+    public Mono<Void> bridgeEntry(@Valid @RequestBody BridgeRequest bridgeRequest) {
         return ReactiveSecurityContextHolder.getContext()
                 .map(securityContext -> (Caller) securityContext.getAuthentication().getPrincipal())
                 .flatMap(requester -> bridgeService.updateBridgeUrl(requester.getClientId(), bridgeRequest));
