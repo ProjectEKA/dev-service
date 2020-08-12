@@ -83,7 +83,7 @@ public class BridgeUserJourneyTest {
     }
 
     @Test
-    void shouldUpdateBridgeServiceRequest() {
+    void shouldUpsertBridgeServiceRequest() {
         var token = string();
         var bridgeId = string();
         var username = string();

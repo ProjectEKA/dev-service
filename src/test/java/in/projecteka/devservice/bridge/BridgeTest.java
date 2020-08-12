@@ -66,7 +66,7 @@ public class BridgeTest {
     }
 
     @Test
-    void shouldUpdateBridgeServiceEntry() {
+    void shouldPopulateBridgeServiceEntry() {
         var bridgeId = string();
         var username = string();
         var password = string();
