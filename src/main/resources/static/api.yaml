@@ -57,6 +57,55 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /bridges/services:
+    put:
+      tags:
+        - bridge-services
+      description: This API is to add hospitals(Bridge services)
+      parameters:
+        - $ref: "#/components/parameters/authorization"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BridgeServiceRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/BridgeServiceRequest'
+      responses:
+        '200':
+          description: Bridge service added successfully
+        '400':
+          description: >
+            Invalid request, required attributes not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: >
+            **Causes:**
+              * Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: >
+            **Causes:**
+              * Downstream system(s) is down.
+              * Unhandled exceptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   parameters:
     authorization:
@@ -76,6 +125,31 @@ components:
         - "url"
       xml:
         name: BridgeRequest
+    BridgeServiceRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/ServiceType'
+        active:
+          type: boolean
+        alias:
+          type: array
+          items:
+            type: string
+      required:
+        - "id"
+        - "name"
+        - "type"
+        - "alias"
+      xml:
+        name: BridgeServiceRequest
+    ServiceType:
+      type: string
+      enum: [HIP, HIU]
     ErrorResponse:
       type: object
       properties:
