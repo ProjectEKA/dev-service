@@ -7,5 +7,5 @@ devservice:
     baseUrl: ${GATEWAY_BASE_URL}
     username: ${GATEWAY_ADMIN_USER}
     password: ${GATEWAY_ADMIN_PASSWORD}
-    clientregistry:
-      url: ${CLIENT_REGISTRY_URL:http://localhost:8080}
+  clientregistry:
+    url: ${CLIENT_REGISTRY_URL:http://localhost:8080}
