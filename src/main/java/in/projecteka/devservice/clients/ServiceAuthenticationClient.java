@@ -15,9 +15,13 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Properties;
 
+import static in.projecteka.devservice.clients.ClientError.networkServiceCallFailed;
+import static in.projecteka.devservice.clients.ClientError.unAuthorized;
+import static in.projecteka.devservice.clients.ClientError.unprocessableEntity;
 import static java.lang.String.format;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static reactor.core.publisher.Mono.error;
 
 public class ServiceAuthenticationClient {
     private final Logger logger = LoggerFactory.getLogger(ServiceAuthenticationClient.class);
@@ -41,7 +45,7 @@ public class ServiceAuthenticationClient {
                 .retrieve()
                 .onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(Properties.class)
                         .doOnNext(properties -> logger.error(properties.toString()))
-                        .thenReturn(ClientError.unAuthorized()))
+                        .thenReturn(unAuthorized()))
                 .bodyToMono(Session.class);
     }
 
@@ -57,11 +61,17 @@ public class ServiceAuthenticationClient {
                 .body(Mono.just(bridgeRequestWith(bridgeId, url)), BridgeUpdateRequest.class)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.BAD_REQUEST.value(),
-                        clientResponse -> Mono.error(ClientError.unprocessableEntity()))
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(unprocessableEntity())))
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.UNAUTHORIZED.value(),
-                        clientResponse -> Mono.error(ClientError.unAuthorized()))
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(unAuthorized())))
                 .onStatus(HttpStatus::is5xxServerError,
-                        clientResponse -> Mono.error(ClientError.networkServiceCallFailed()))
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(networkServiceCallFailed())))
                 .toBodilessEntity()
                 .then();
     }
@@ -81,11 +91,18 @@ public class ServiceAuthenticationClient {
                 .body(Mono.just(List.of(bridgeServiceRequest(id, name, type, active))), BridgeServiceRequest.class)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.BAD_REQUEST.value(),
-                        clientResponse -> Mono.error(ClientError.unprocessableEntity()))
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(unprocessableEntity())))
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.UNAUTHORIZED.value(),
-                        clientResponse -> Mono.error(ClientError.unAuthorized()))
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(unAuthorized())))
                 .onStatus(HttpStatus::is5xxServerError,
-                        clientResponse -> Mono.error(ClientError.networkServiceCallFailed()))
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(networkServiceCallFailed())
+                                ))
                 .toBodilessEntity()
                 .then();
     }
