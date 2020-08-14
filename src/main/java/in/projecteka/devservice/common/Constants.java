@@ -5,4 +5,5 @@ public class Constants {
     public static final String CURRENT_VERSION = "/" + API_VERSION;
     public static final String PATH_BRIDGES = CURRENT_VERSION + "/bridges";
     public static final String PATH_HEARTBEAT = CURRENT_VERSION + "/heartbeat";
+    public static final String PATH_BRIDGE_SERVICES = CURRENT_VERSION + "/bridges/services";
 }

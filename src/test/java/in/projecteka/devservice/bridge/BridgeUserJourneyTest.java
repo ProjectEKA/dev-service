@@ -1,6 +1,10 @@
 package in.projecteka.devservice.bridge;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
+import in.projecteka.devservice.bridge.model.OrganizationDetails;
+import in.projecteka.devservice.bridge.model.ServiceType;
+import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import in.projecteka.devservice.common.Authenticator;
@@ -15,10 +19,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotNull;
+import java.awt.*;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
+
 import static in.projecteka.devservice.bridge.TestBuilders.bridgeRequest;
 import static in.projecteka.devservice.bridge.TestBuilders.session;
 import static in.projecteka.devservice.bridge.TestBuilders.string;
+import static in.projecteka.devservice.bridge.model.ServiceType.HIP;
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
+import static in.projecteka.devservice.common.Constants.PATH_BRIDGE_SERVICES;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -35,6 +47,8 @@ public class BridgeUserJourneyTest {
     JWKSet jwkSet;
     @MockBean
     ServiceAuthenticationClient serviceAuthenticationClient;
+    @MockBean
+    ClientRegistryClient clientRegistryClient;
     @MockBean
     GatewayServiceProperties gatewayServiceProperties;
     @MockBean
@@ -63,6 +77,46 @@ public class BridgeUserJourneyTest {
                 .header(AUTHORIZATION, token)
                 .contentType(APPLICATION_JSON)
                 .bodyValue(bridgeRequest)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void shouldUpsertBridgeServiceRequest() {
+        var token = string();
+        var bridgeId = string();
+        var username = string();
+        var password = string();
+        var session = session().build();
+        var caller = Caller.builder().clientId(bridgeId).build();
+        var alias = new ArrayList<String>();
+        var request = BridgeServiceRequest.builder()
+                .id("service_id")
+                .type(HIP)
+                .alias(alias)
+                .name("hospital_name").build();
+        var orgDetails = OrganizationDetails.builder()
+                .id(bridgeId)
+                .name(request.getName())
+                .city(request.getCity())
+                .orgAlias(request.getAlias()).build();
+
+        when(authenticator.verify(token)).thenReturn(just(caller));
+        when(gatewayServiceProperties.getUsername()).thenReturn(username);
+        when(gatewayServiceProperties.getPassword()).thenReturn(password);
+        when(serviceAuthenticationClient.getTokenFor(username, password)).thenReturn(just(session));
+        when(serviceAuthenticationClient.upsertBridgeServiceEntry(
+                bridgeId, request.getId(), request.getName(), request.getType(), request.isActive(), session
+        )).thenReturn(Mono.empty());
+        when(clientRegistryClient.addOrganization(orgDetails)).thenReturn(Mono.empty());
+
+        webTestClient
+                .put()
+                .uri(PATH_BRIDGE_SERVICES)
+                .header(AUTHORIZATION, token)
+                .contentType(APPLICATION_JSON)
+                .bodyValue(request)
                 .exchange()
                 .expectStatus()
                 .isOk();

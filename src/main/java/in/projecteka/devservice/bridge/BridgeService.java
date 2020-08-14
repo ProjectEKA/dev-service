@@ -1,6 +1,9 @@
 package in.projecteka.devservice.bridge;
 
 import in.projecteka.devservice.bridge.model.BridgeRequest;
+import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
+import in.projecteka.devservice.bridge.model.OrganizationDetails;
+import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import lombok.AllArgsConstructor;
@@ -9,11 +12,29 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class BridgeService {
     private final ServiceAuthenticationClient serviceAuthenticationClient;
+    private final ClientRegistryClient clientRegistryClient;
     private final GatewayServiceProperties properties;
 
     public Mono<Void> updateBridgeUrl(String bridgeId, BridgeRequest bridgeRequest) {
         return serviceAuthenticationClient.getTokenFor(properties.getUsername(), properties.getPassword())
                 .flatMap(session -> serviceAuthenticationClient.updateBridgeWith(bridgeId,
                         bridgeRequest.getUrl(), session.getTokenType() + " " + session.getAccessToken()));
+    }
+
+    public Mono<Void> upsertBridgeServiceEntry(String bridgeId, BridgeServiceRequest request) {
+        return serviceAuthenticationClient.getTokenFor(properties.getUsername(), properties.getPassword())
+                .flatMap(session -> {
+                    OrganizationDetails orgDetails = OrganizationDetails.builder()
+                            .id(bridgeId)
+                            .name(request.getName())
+                            .orgAlias(request.getAlias())
+                            .city(request.getCity())
+                            .build();
+
+                    return serviceAuthenticationClient.upsertBridgeServiceEntry(
+                            bridgeId, request.getId(), request.getName(),
+                            request.getType(), request.isActive(), session)
+                            .then(clientRegistryClient.addOrganization(orgDetails));
+                });
     }
 }

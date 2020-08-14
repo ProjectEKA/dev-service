@@ -1,6 +1,7 @@
 package in.projecteka.devservice.bridge;
 
 import in.projecteka.devservice.bridge.model.BridgeRequest;
+import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.common.Caller;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
+import static in.projecteka.devservice.common.Constants.PATH_BRIDGE_SERVICES;
 
 @AllArgsConstructor
 @RestController
@@ -24,5 +26,12 @@ public class BridgeController {
         return ReactiveSecurityContextHolder.getContext()
                 .map(securityContext -> (Caller) securityContext.getAuthentication().getPrincipal())
                 .flatMap(requester -> bridgeService.updateBridgeUrl(requester.getClientId(), bridgeRequest));
+    }
+
+    @PutMapping(PATH_BRIDGE_SERVICES)
+    public Mono<Void> bridgeServiceEntry(@Valid @RequestBody BridgeServiceRequest bridgeServiceRequest) {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(securityContext -> (Caller) securityContext.getAuthentication().getPrincipal())
+                .flatMap(requester -> bridgeService.upsertBridgeServiceEntry(requester.getClientId(), bridgeServiceRequest));
     }
 }
