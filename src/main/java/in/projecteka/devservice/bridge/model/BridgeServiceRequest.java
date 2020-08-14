@@ -10,11 +10,11 @@ import java.util.List;
 @Value
 @Builder
 public class BridgeServiceRequest {
-    @NotBlank(message = "hospital id can't be blank")
+    @NotBlank(message = "service id can't be blank")
     String id;
-    @NotBlank(message = "hospital name can't be blank")
+    @NotBlank(message = "service name can't be blank")
     String name;
-    @NotNull(message = "hospital name alias can't be empty")
+    @NotNull(message = "service name alias can't be empty")
     List<String> alias;
     String city;
     @NotNull(message = "Service type can be either HIP or HIU")
