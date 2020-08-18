@@ -7,6 +7,9 @@ import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.ClientRegistryProperties;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
+import in.projecteka.devservice.email.EmailProperties;
+import in.projecteka.devservice.email.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -18,6 +21,7 @@ import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -74,5 +78,10 @@ public class DevServiceConfiguration {
                 resourceProperties, applicationContext);
         clientErrorExceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
         return clientErrorExceptionHandler;
+    }
+
+    @Bean
+    public EmailService emailService(@Autowired JavaMailSender javaMailSender, EmailProperties emailProperties){
+        return new EmailService(javaMailSender, emailProperties);
     }
 }

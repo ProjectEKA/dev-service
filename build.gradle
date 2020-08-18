@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.nimbusds:nimbus-jose-jwt:8.15'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.3.3.RELEASE'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompile group: 'junit', name: 'junit', version: '4.12'

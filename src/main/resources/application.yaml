@@ -1,3 +1,13 @@
+#  ENV PORT=${PORT}
+#    ENV SMTP_HOST ${SMTP_HOST}
+#    ENV SMTP_PORT ${SMTP_PORT}
+#    ENV SMTP_USER ${SMTP_USER}
+#    ENV SMTP_USER_PASSWORD=${SMTP_USER_PASSWORD}
+#    ENV EMAIL_CLIENT_NAME=${EMAIL_CLIENT_NAME}
+#    ENV EMAIL_SENDER=${EMAIL_SENDER}
+#    ENV EMAIL_RECEIVER ${EMAIL_RECEIVER}
+#    ENV EMAIL_SUBJECT ${EMAIL_SUBJECT}
+#    ENV CLIENT_URL ${CLIENT_URL}
 server:
   port: 9090
 devservice:
@@ -9,3 +19,18 @@ devservice:
     password: ${GATEWAY_ADMIN_PASSWORD}
   clientregistry:
     url: ${CLIENT_REGISTRY_URL:http://localhost:8080}
+  email:
+    clientName: ${EMAIL_CLIENT_NAME}
+    sender: ${EMAIL_SENDER}
+    receiver: ${EMAIL_RECEIVER}
+    subject: ${EMAIL_SUBJECT}
+spring:
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USER}
+    password: ${SMTP_USER_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: ${SMTP_AUTH:true}
