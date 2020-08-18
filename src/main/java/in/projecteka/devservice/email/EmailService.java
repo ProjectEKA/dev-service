@@ -18,7 +18,7 @@ public class EmailService {
             try {
                 SimpleMailMessage msg = new SimpleMailMessage();
                 msg.setTo(emailProperties.getReceiver());
-
+                msg.setFrom(emailProperties.getSender());
                 msg.setSubject(emailProperties.getSubject());
                 msg.setText(String.format("Please find the details \n\n" +
                                 "Name: %s \n" +
@@ -27,13 +27,15 @@ public class EmailService {
                                 "Organizations Ids you serve: %s\n" +
                                 "Intent: %s\n" +
                                 "Endpoint: %s \n\n" +
-                                "Regards",
+                                "Regards\n" +
+                                "%s",
                         emailRequest.getName(),
                         emailRequest.getEmail(),
                         emailRequest.getRepOrg(),
                         emailRequest.getServeOrgId(),
                         emailRequest.getIntent(),
-                        emailRequest.getEndPoint()));
+                        emailRequest.getEndPoint(),
+                        emailProperties.getSender()));
 
                 javaMailSender.send(msg);
                 monoSink.success();

@@ -9,11 +9,11 @@ devservice:
     password: welcome
   clientregistry:
     url: http://localhost:8080
-email:
-  clientName: Local Client
-  sender: nexengineer@gmail.com
-  receiver: nexengineer@gmail.com
-  subject: Details
+  email:
+    clientName: Local Client
+    sender: xyz@gmail.com
+    receiver: xyz@gmail.com
+    subject: Details
 spring:
   mail:
     host: smtp.mailtrap.io
