@@ -16,10 +16,10 @@ devservice:
     subject: ${EMAIL_SUBJECT}
 spring:
   mail:
-    host: ${SMTP_HOST}
-    port: ${SMTP_PORT}
-    username: ${SMTP_USER}
-    password: ${SMTP_USER_PASSWORD}
+    host: ${SMTP_HOST:smtp.mailtrap.io}
+    port: ${SMTP_PORT:2525}
+    username: ${SMTP_USER:b9d018e7253caf}
+    password: ${SMTP_USER_PASSWORD:0b2e32cda91ecd}
     properties:
       mail:
         smtp:
