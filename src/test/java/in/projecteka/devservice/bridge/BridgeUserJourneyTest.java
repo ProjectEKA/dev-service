@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -42,6 +43,9 @@ import static reactor.core.publisher.Mono.just;
 public class BridgeUserJourneyTest {
     @Autowired
     WebTestClient webTestClient;
+
+    @MockBean
+    JavaMailSender javaMailSender;
 
     @MockBean
     JWKSet jwkSet;
