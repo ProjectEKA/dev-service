@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import static in.projecteka.devservice.clients.ClientError.unAuthorized;
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
+import static in.projecteka.devservice.common.Constants.PATH_EMAIL_SEND;
 import static in.projecteka.devservice.common.Constants.PATH_HEARTBEAT;
 import static in.projecteka.devservice.common.Constants.PATH_BRIDGE_SERVICES;
 import static org.springframework.util.StringUtils.hasText;
@@ -48,7 +49,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .logout().disable()
                 .authorizeExchange()
-                .pathMatchers(PATH_HEARTBEAT).permitAll().and()
+                .pathMatchers(PATH_HEARTBEAT, PATH_EMAIL_SEND).permitAll().and()
                 .authorizeExchange()
                 .pathMatchers("/**")
                 .authenticated().and()
