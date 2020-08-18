@@ -21,6 +21,8 @@ spring:
     username: b9d018e7253caf
     password: 0b2e32cda91ecd
     properties:
+      main:
+        lazy-initialization: true
       mail:
         smtp:
           auth: ${SMTP_AUTH:true}
