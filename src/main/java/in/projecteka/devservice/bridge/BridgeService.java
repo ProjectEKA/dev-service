@@ -3,6 +3,8 @@ package in.projecteka.devservice.bridge;
 import in.projecteka.devservice.bridge.model.BridgeRequest;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
+import in.projecteka.devservice.bridge.model.ServiceType;
+import in.projecteka.devservice.clients.ClientError;
 import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
@@ -24,6 +26,8 @@ public class BridgeService {
     public Mono<Void> upsertBridgeServiceEntry(String bridgeId, BridgeServiceRequest request) {
         return serviceAuthenticationClient.getTokenFor(properties.getUsername(), properties.getPassword())
                 .flatMap(session -> {
+                    if (!(request.getType().equals(ServiceType.HIP) || request.getType().equals(ServiceType.HIU)))
+                        return Mono.error(ClientError.serviceTypeWrong());
                     OrganizationDetails orgDetails = OrganizationDetails.builder()
                             .id(request.getId())
                             .name(request.getName())

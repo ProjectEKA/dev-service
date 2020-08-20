@@ -39,4 +39,9 @@ public class ClientError extends Throwable {
                 new ErrorRepresentation(new Error(BAD_REQUEST_FROM_GATEWAY, "Bad Request")));
 
     }
+
+    public static ClientError serviceTypeWrong() {
+        return new ClientError(BAD_REQUEST,
+                new ErrorRepresentation(new Error(BAD_REQUEST_FROM_GATEWAY, "Service type must be HIP or HIU")));
+    }
 }
