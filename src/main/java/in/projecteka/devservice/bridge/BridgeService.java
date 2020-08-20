@@ -25,10 +25,10 @@ public class BridgeService {
         return serviceAuthenticationClient.getTokenFor(properties.getUsername(), properties.getPassword())
                 .flatMap(session -> {
                     OrganizationDetails orgDetails = OrganizationDetails.builder()
-                            .id(bridgeId)
+                            .id(request.getId())
                             .name(request.getName())
                             .orgAlias(request.getAlias())
-                            .city(request.getCity())
+                            .city(getCity(request))
                             .build();
 
                     return serviceAuthenticationClient.upsertBridgeServiceEntry(
@@ -36,5 +36,9 @@ public class BridgeService {
                             request.getType(), request.isActive(), session)
                             .then(clientRegistryClient.addOrganization(orgDetails));
                 });
+    }
+
+    private String getCity(BridgeServiceRequest request) {
+        return request.getCity() != null ? request.getCity() : "";
     }
 }

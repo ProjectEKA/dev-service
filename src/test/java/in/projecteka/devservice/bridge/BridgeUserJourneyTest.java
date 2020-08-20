@@ -98,10 +98,11 @@ public class BridgeUserJourneyTest {
         var request = BridgeServiceRequest.builder()
                 .id("service_id")
                 .type(HIP)
+                .city("random")
                 .alias(alias)
                 .name("hospital_name").build();
         var orgDetails = OrganizationDetails.builder()
-                .id(bridgeId)
+                .id(request.getId())
                 .name(request.getName())
                 .city(request.getCity())
                 .orgAlias(request.getAlias()).build();

@@ -2,6 +2,7 @@ package in.projecteka.devservice.bridge;
 
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
+import in.projecteka.devservice.bridge.model.ServiceType;
 import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
@@ -71,9 +72,15 @@ public class BridgeTest {
         var username = string();
         var password = string();
         var session = session().build();
-        var request = BridgeServiceRequest.builder().build();
+        var request = BridgeServiceRequest.builder()
+                .active(true)
+                .city(string())
+                .id(string())
+                .name(string())
+                .type(ServiceType.HIP)
+                .build();
         var orgDetails = OrganizationDetails.builder()
-                .id(bridgeId)
+                .id(request.getId())
                 .name(request.getName())
                 .city(request.getCity())
                 .orgAlias(request.getAlias()).build();
