@@ -26,8 +26,6 @@ public class BridgeService {
     public Mono<Void> upsertBridgeServiceEntry(String bridgeId, BridgeServiceRequest request) {
         return serviceAuthenticationClient.getTokenFor(properties.getUsername(), properties.getPassword())
                 .flatMap(session -> {
-                    if (!(request.getType().equals(ServiceType.HIP) || request.getType().equals(ServiceType.HIU)))
-                        return Mono.error(ClientError.serviceTypeWrong());
                     OrganizationDetails orgDetails = OrganizationDetails.builder()
                             .id(request.getId())
                             .name(request.getName())
