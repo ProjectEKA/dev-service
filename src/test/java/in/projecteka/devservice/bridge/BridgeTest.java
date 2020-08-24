@@ -42,6 +42,7 @@ public class BridgeTest {
                 gatewayServiceProperties
         ));
     }
+
     @Test
     void shouldUpdateBridgeUrl() {
         var bridgeId = string();
