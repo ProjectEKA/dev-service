@@ -3,7 +3,7 @@ name: Build and push Sandbox Image
 on:
   push:
     tags:
-      - 'sandbox-*'
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
