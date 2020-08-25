@@ -12,4 +12,5 @@ public class OrganizationDetails {
     String name;
     String city;
     List<String> orgAlias;
+    ServiceType serviceType;
 }
