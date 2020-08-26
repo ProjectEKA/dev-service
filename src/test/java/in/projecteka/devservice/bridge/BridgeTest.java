@@ -84,7 +84,8 @@ public class BridgeTest {
                 .id(request.getId())
                 .name(request.getName())
                 .city(request.getCity())
-                .orgAlias(request.getAlias()).build();
+                .orgAlias(request.getAlias())
+                .serviceType(request.getType()).build();
 
         when(gatewayServiceProperties.getUsername()).thenReturn(username);
         when(gatewayServiceProperties.getPassword()).thenReturn(password);

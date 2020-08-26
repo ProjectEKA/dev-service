@@ -105,7 +105,8 @@ public class BridgeUserJourneyTest {
                 .id(request.getId())
                 .name(request.getName())
                 .city(request.getCity())
-                .orgAlias(request.getAlias()).build();
+                .orgAlias(request.getAlias())
+                .serviceType(request.getType()).build();
 
         when(authenticator.verify(token)).thenReturn(just(caller));
         when(gatewayServiceProperties.getUsername()).thenReturn(username);
