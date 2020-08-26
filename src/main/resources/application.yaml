@@ -14,6 +14,7 @@ devservice:
     sender: ${EMAIL_SENDER}
     receiver: ${EMAIL_RECEIVER}
     subject: ${EMAIL_SUBJECT}
+    allowedOrigin: ${ALLOWED_ORIGIN_HOST:*}
 spring:
   mail:
     host: ${SMTP_HOST:smtp.mailtrap.io}
