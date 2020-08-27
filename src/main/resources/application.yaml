@@ -15,6 +15,9 @@ devservice:
     receiver: ${EMAIL_RECEIVER}
     subject: ${EMAIL_SUBJECT}
     allowedOrigin: ${ALLOWED_ORIGIN_HOST:*}
+  googleservice:
+    credentialPath: ${GOOGLE_SERVICE_CREDENTIAL_PATH}
+    sheetId: ${SHEET_ID}
 spring:
   mail:
     host: ${SMTP_HOST:smtp.mailtrap.io}

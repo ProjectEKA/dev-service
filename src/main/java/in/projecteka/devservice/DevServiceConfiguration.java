@@ -9,6 +9,7 @@ import in.projecteka.devservice.clients.properties.ClientRegistryProperties;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import in.projecteka.devservice.email.EmailProperties;
 import in.projecteka.devservice.email.EmailService;
+import in.projecteka.devservice.email.GoogleServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -81,7 +82,9 @@ public class DevServiceConfiguration {
     }
 
     @Bean
-    public EmailService emailService(@Autowired JavaMailSender javaMailSender, EmailProperties emailProperties){
-        return new EmailService(javaMailSender, emailProperties);
+    public EmailService emailService(@Autowired JavaMailSender javaMailSender,
+                                     EmailProperties emailProperties,
+                                     GoogleServiceProperties googleServiceProperties){
+        return new EmailService(javaMailSender, emailProperties, googleServiceProperties);
     }
 }

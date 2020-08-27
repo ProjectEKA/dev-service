@@ -1,6 +1,6 @@
 package in.projecteka.devservice.email;
 
-import in.projecteka.devservice.email.model.EmailRequest;
+import in.projecteka.devservice.email.model.Field;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static in.projecteka.devservice.common.Constants.PATH_EMAIL_SEND;
 
@@ -19,7 +21,7 @@ public class EmailController {
 
     @CrossOrigin(origins = "${devservice.email.allowedOrigin}")
     @PostMapping(PATH_EMAIL_SEND)
-    public Mono<Void> bridgeEntry(@Valid @RequestBody EmailRequest emailRequest) {
+    public Mono<Void> bridgeEntry(@Valid @RequestBody List<Field> emailRequest) {
         return emailService.sendEmail(emailRequest);
     }
 }
