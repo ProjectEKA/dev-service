@@ -13,4 +13,5 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 public class GoogleServiceProperties {
     private String credentialPath;
     private String sheetId;
+    private Boolean enabled;
 }
