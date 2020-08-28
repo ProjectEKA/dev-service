@@ -3,7 +3,6 @@ package in.projecteka.devservice.bridge;
 import com.nimbusds.jose.jwk.JWKSet;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
-import in.projecteka.devservice.bridge.model.ServiceType;
 import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
@@ -20,11 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
-import java.awt.*;
-import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.List;
 
 import static in.projecteka.devservice.bridge.TestBuilders.bridgeRequest;
 import static in.projecteka.devservice.bridge.TestBuilders.session;

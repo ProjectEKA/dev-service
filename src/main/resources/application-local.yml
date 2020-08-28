@@ -14,6 +14,10 @@ devservice:
     sender: xyz@gmail.com
     receiver: xyz@gmail.com
     subject: Details
+  googleservice:
+    credentialPath: /PATH/TO/CREDENTIALS
+    sheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
+    enabled: false
 spring:
   mail:
     host: smtp.mailtrap.io
