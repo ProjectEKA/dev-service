@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Field {
     private String title;
     private String value;
+    private String tag;
 }

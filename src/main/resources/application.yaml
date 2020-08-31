@@ -15,6 +15,9 @@ devservice:
     receiver: ${EMAIL_RECEIVER}
     subject: ${EMAIL_SUBJECT}
     allowedOrigin: ${ALLOWED_ORIGIN_HOST:*}
+    autoResponseBodyPath: ${AUTO_RESPONSE_BODY_PATH}
+    autoResponseSubject: ${AUTO_RESPONSE_SUBJECT}
+    autoResponseEnabled: ${AUTO_RESPONSE_ENABLED:false}
   googleservice:
     credentialPath: ${GOOGLE_SERVICE_CREDENTIAL_PATH}
     sheetId: ${GOOGLE_SERVICE_SHEET_ID}

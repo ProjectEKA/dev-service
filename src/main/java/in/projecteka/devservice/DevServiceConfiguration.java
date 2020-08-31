@@ -21,7 +21,6 @@ import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.client.reactive.ClientHttpConnector;
@@ -33,6 +32,9 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,7 +96,7 @@ public class DevServiceConfiguration {
     @SneakyThrows
     @ConditionalOnProperty(value = "devservice.googleservice.enabled", havingValue = "true")
     @Bean({"credential"})
-    public Credential credential(GoogleServiceProperties googleServiceProperties){
+    public Credential credential(GoogleServiceProperties googleServiceProperties) {
         List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
         return GoogleCredential.fromStream(new FileInputStream(googleServiceProperties.getCredentialPath()))
                 .createScoped(SCOPES);
@@ -103,18 +105,28 @@ public class DevServiceConfiguration {
     @SneakyThrows
     @ConditionalOnProperty(value = "devservice.googleservice.enabled", havingValue = "false", matchIfMissing = true)
     @Bean({"credential"})
-    public Credential credentialDisabled(){
+    public Credential credentialDisabled() {
         return new GoogleCredential();
+    }
+
+    @ConditionalOnProperty(value = "devservice.email.autoResponseEnabled", havingValue = "true")
+    @Bean("autoResponseEmailBody")
+    public String autoResponseEmailBody(EmailProperties emailProperties) throws IOException {
+        return Files.readString(Paths.get(emailProperties.getAutoResponseBodyPath()));
+    }
+
+    @ConditionalOnProperty(value = "devservice.email.autoResponseEnabled", havingValue = "false", matchIfMissing = true)
+    @Bean("autoResponseEmailBody")
+    public String autoResponseEmptyBody() {
+        return "";
     }
 
     @Bean
     public EmailService emailService(@Autowired JavaMailSender javaMailSender,
                                      EmailProperties emailProperties,
                                      GoogleServiceProperties googleServiceProperties,
-                                     @Qualifier("credential") Credential credential){
-        return new EmailService(javaMailSender, emailProperties, googleServiceProperties, credential);
+                                     @Qualifier("credential") Credential credential,
+                                     @Qualifier("autoResponseEmailBody") String autoResponseEmailBody) {
+        return new EmailService(javaMailSender, emailProperties, googleServiceProperties, credential, autoResponseEmailBody);
     }
-
-
-
 }
