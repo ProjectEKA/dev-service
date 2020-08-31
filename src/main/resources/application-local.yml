@@ -14,6 +14,9 @@ devservice:
     sender: xyz@gmail.com
     receiver: xyz@gmail.com
     subject: Details
+    autoResponseBodyPath: /Users/some_user/Documents/emailbody.txt
+    autoResponseSubject: Thanks
+    autoResponseEnabled: false
   googleservice:
     credentialPath: /PATH/TO/CREDENTIALS
     sheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
