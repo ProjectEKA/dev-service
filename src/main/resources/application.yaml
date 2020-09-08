@@ -22,6 +22,16 @@ devservice:
     credentialPath: ${GOOGLE_SERVICE_CREDENTIAL_PATH}
     sheetId: ${GOOGLE_SERVICE_SHEET_ID}
     enabled: ${GOOGLE_SERVICE_ENABLED:false}
+  support-requests:
+    spreadsheetId: ${SUPPORT_REQUESTS_SPREADSHEET_ID}
+    credentialPath: ${GOOGLE_SERVICE_CREDENTIAL_PATH}
+  db:
+    host: ${POSTGRES_HOST}
+    port: ${POSTGRES_PORT:5432}
+    schema: ${DEV_SERVICE_DB_NAME}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    poolSize: ${MASTER_POOL_SIZE:5}
 spring:
   mail:
     host: ${SMTP_HOST:smtp.mailtrap.io}
@@ -34,3 +44,13 @@ spring:
       mail:
         smtp:
           auth: ${SMTP_AUTH:true}
+  liquibase:
+    change-log: classpath:liquibase:xml
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/dev_service
+    username: postgres
+    password: password
+logging:
+  level:
+    liquibase: INFO

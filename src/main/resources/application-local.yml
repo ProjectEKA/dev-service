@@ -21,6 +21,16 @@ devservice:
     credentialPath: /PATH/TO/CREDENTIALS
     sheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
     enabled: false
+  support-requests:
+    spreadsheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
+    credentialPath: /PATH/TO/CREDENTIALS
+  db:
+    host: localhost
+    port: 5432
+    schema: dev_service
+    user: postgres
+    password: password
+    poolSize: 5
 spring:
   mail:
     host: smtp.mailtrap.io
@@ -33,3 +43,13 @@ spring:
       mail:
         smtp:
           auth: ${SMTP_AUTH:true}
+  liquibase:
+    change-log: classpath:liquibase.xml
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://localhost:5432/dev_service"
+    username: postgres
+    password: password
+logging:
+  level:
+    liquibase: INFO

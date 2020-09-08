@@ -10,9 +10,16 @@ import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.ClientRegistryProperties;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
+import in.projecteka.devservice.common.DbOptions;
 import in.projecteka.devservice.email.EmailProperties;
 import in.projecteka.devservice.email.EmailService;
 import in.projecteka.devservice.email.GoogleServiceProperties;
+import in.projecteka.devservice.support.SupportRequestRepository;
+import in.projecteka.devservice.support.SupportRequestService;
+import in.projecteka.devservice.support.model.SupportRequestProperties;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -109,6 +116,14 @@ public class DevServiceConfiguration {
         return new GoogleCredential();
     }
 
+    @SneakyThrows
+    @Bean({"supportRequestCredential"})
+    public Credential supportRequestCredential(SupportRequestProperties supportRequestProperties) {
+        List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
+        return GoogleCredential.fromStream(new FileInputStream(supportRequestProperties.getCredentialPath()))
+                .createScoped(SCOPES);
+    }
+
     @ConditionalOnProperty(value = "devservice.email.autoResponseEnabled", havingValue = "true")
     @Bean("autoResponseEmailBody")
     public String autoResponseEmailBody(EmailProperties emailProperties) throws IOException {
@@ -128,5 +143,29 @@ public class DevServiceConfiguration {
                                      @Qualifier("credential") Credential credential,
                                      @Qualifier("autoResponseEmailBody") String autoResponseEmailBody) {
         return new EmailService(javaMailSender, emailProperties, googleServiceProperties, credential, autoResponseEmailBody);
+    }
+
+    @Bean
+    public SupportRequestService supportRequestService(@Qualifier("supportRequestCredential") Credential credential,
+                                                       SupportRequestRepository supportRequestRepository,
+                                                       SupportRequestProperties supportRequestProperties) {
+        return new SupportRequestService(credential, supportRequestRepository, supportRequestProperties);
+    }
+
+    @Bean("pgPoolClient")
+    public PgPool pgPoolClient(DbOptions dbOptions) {
+        PgConnectOptions connectOptions = new PgConnectOptions()
+                .setPort(dbOptions.getPort())
+                .setHost(dbOptions.getHost())
+                .setDatabase(dbOptions.getSchema())
+                .setUser(dbOptions.getUser())
+                .setPassword(dbOptions.getPassword());
+
+        PoolOptions poolOptions = new PoolOptions().setMaxSize(dbOptions.getPoolSize());
+        return PgPool.pool(connectOptions, poolOptions);
+    }
+    @Bean
+    public SupportRequestRepository supportRequestRepository(@Qualifier("pgPoolClient") PgPool pgPoolClient) {
+        return new SupportRequestRepository(pgPoolClient);
     }
 }
