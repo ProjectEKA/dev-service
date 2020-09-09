@@ -1,7 +1,6 @@
 package in.projecteka.devservice;
 
 import com.zaxxer.hikari.HikariDataSource;
-import in.projecteka.devservice.support.SupportRequestService;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
