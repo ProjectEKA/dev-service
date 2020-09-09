@@ -9,6 +9,7 @@ import static in.projecteka.devservice.clients.model.ErrorCode.BAD_REQUEST_FROM_
 import static in.projecteka.devservice.clients.model.ErrorCode.EMAIL_SERVICE_ERROR;
 import static in.projecteka.devservice.clients.model.ErrorCode.INVALID_TOKEN;
 import static in.projecteka.devservice.clients.model.ErrorCode.NETWORK_SERVICE_ERROR;
+import static in.projecteka.devservice.clients.model.ErrorCode.NO_SHEET_FOUND;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -43,6 +44,12 @@ public class ClientError extends Throwable {
     public static ClientError unprocessableEntity() {
         return new ClientError(BAD_REQUEST,
                 new ErrorRepresentation(new Error(BAD_REQUEST_FROM_GATEWAY, "Bad Request")));
+
+    }
+
+    public static ClientError noSheetFound() {
+        return new ClientError(BAD_REQUEST,
+                new ErrorRepresentation(new Error(NO_SHEET_FOUND, "No Sheet Found")));
 
     }
 }

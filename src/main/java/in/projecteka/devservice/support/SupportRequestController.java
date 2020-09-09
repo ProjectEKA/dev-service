@@ -1,7 +1,9 @@
 package in.projecteka.devservice.support;
 
+import in.projecteka.devservice.clients.ClientError;
 import in.projecteka.devservice.support.model.ApprovedRequest;
 import lombok.AllArgsConstructor;
+import org.apache.http.client.ClientProtocolException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
