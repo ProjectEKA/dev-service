@@ -45,12 +45,12 @@ spring:
         smtp:
           auth: ${SMTP_AUTH:true}
   liquibase:
-    change-log: classpath:liquibase.xml
+    change-log: ${DEV_SERVICE_LIQUIBASE_PATH:classpath:liquibase.xml}
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/dev_service
-    username: postgres
-    password: password
+    driver-class-name: ${DEV_SERVICE_DRIVER_CLASSNAME:org.postgresql.Driver}
+    url: ${DEV_SERVICE_JDBC_URL:jdbc:postgresql://localhost:5432/dev_service}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:password}
 logging:
   level:
     liquibase: INFO
