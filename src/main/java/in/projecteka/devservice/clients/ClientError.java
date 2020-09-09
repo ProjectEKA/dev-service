@@ -1,14 +1,13 @@
 package in.projecteka.devservice.clients;
 
-import in.projecteka.devservice.clients.model.ErrorRepresentation;
 import in.projecteka.devservice.clients.model.Error;
+import in.projecteka.devservice.clients.model.ErrorRepresentation;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import static in.projecteka.devservice.clients.model.ErrorCode.BAD_REQUEST_FROM_GATEWAY;
 import static in.projecteka.devservice.clients.model.ErrorCode.EMAIL_SERVICE_ERROR;
 import static in.projecteka.devservice.clients.model.ErrorCode.INVALID_TOKEN;
-import static in.projecteka.devservice.clients.model.ErrorCode.NETWORK_SERVICE_ERROR;
 import static in.projecteka.devservice.clients.model.ErrorCode.NO_SHEET_FOUND;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;

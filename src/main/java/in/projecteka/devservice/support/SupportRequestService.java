@@ -41,7 +41,6 @@ public class SupportRequestService {
                     }
                     return Mono.empty();
                 });
-
     }
 
     private SupportRequest getSupportRequest(List<Object> row) {

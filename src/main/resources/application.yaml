@@ -45,7 +45,7 @@ spring:
         smtp:
           auth: ${SMTP_AUTH:true}
   liquibase:
-    change-log: classpath:liquibase:xml
+    change-log: classpath:liquibase.xml
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/dev_service
