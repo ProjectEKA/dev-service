@@ -7,6 +7,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
+import in.projecteka.devservice.support.model.ApprovedRequest;
 import in.projecteka.devservice.support.model.SupportRequest;
 import in.projecteka.devservice.support.model.SupportRequestProperties;
 import lombok.AllArgsConstructor;
@@ -27,13 +28,11 @@ public class SupportRequestService {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 
-    public Mono<Void> processRequest() throws GeneralSecurityException, IOException {
+    public Mono<Void> processRequest(ApprovedRequest approvedRequest) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .build();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String currentDate = LocalDateTime.now().format(dateTimeFormatter);
-        List<String> ranges = Arrays.asList(currentDate + "!A1:Z");
+        List<String> ranges = Arrays.asList(approvedRequest.getSheetName() + "!A1:Z");
         BatchGetValuesResponse readResult = service.spreadsheets().values()
                 .batchGet(supportRequestProperties.getSpreadsheetId())
                 .setRanges(ranges)
