@@ -1,9 +1,7 @@
 package in.projecteka.devservice.support;
 
-import in.projecteka.devservice.clients.ClientError;
-import in.projecteka.devservice.support.model.ApprovedRequest;
+import in.projecteka.devservice.support.model.ApprovedRequestsSheet;
 import lombok.AllArgsConstructor;
-import org.apache.http.client.ClientProtocolException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +20,7 @@ public class SupportRequestController {
     private final SupportRequestService supportRequestService;
 
     @PostMapping(PATH_SUPPORT_REQUEST)
-    public Mono<Void> bridgeEntry(@Valid @RequestBody ApprovedRequest approvedRequest) throws GeneralSecurityException, IOException {
-     return supportRequestService.processRequest(approvedRequest);
+    public Mono<Void> bridgeEntry(@Valid @RequestBody ApprovedRequestsSheet approvedRequestsSheet) throws GeneralSecurityException, IOException {
+        return supportRequestService.processRequest(approvedRequestsSheet);
     }
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @Setter
-public class ApprovedRequest {
+public class ApprovedRequestsSheet {
     private String sheetName;
 }
