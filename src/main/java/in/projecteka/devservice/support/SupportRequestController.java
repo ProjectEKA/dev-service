@@ -18,7 +18,7 @@ public class SupportRequestController {
     private final SupportRequestService supportRequestService;
 
     @PostMapping(PATH_SUPPORT_REQUEST)
-    public Mono<Void> bridgeEntry(@Valid @RequestBody ApprovedRequestsSheet approvedRequestsSheet) {
+    public Mono<Void> supportRequestEntry(@Valid @RequestBody ApprovedRequestsSheet approvedRequestsSheet) {
         return supportRequestService.processRequest(approvedRequestsSheet);
     }
 }

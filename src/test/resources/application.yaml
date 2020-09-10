@@ -23,8 +23,7 @@ devservice:
     sheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
     enabled: false
   support-requests:
-    spreadsheetId: 1g0DRAdrBmUSQ0_uVuUYZBrjp-4RzGCPdepQSgmYmtzA
-    credentialPath: /PATH/TO/CREDENTIALS
+    spreadsheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
   db:
     host: localhost
     port: 5432

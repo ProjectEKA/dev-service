@@ -116,14 +116,6 @@ public class DevServiceConfiguration {
         return new GoogleCredential();
     }
 
-    @SneakyThrows
-    @Bean({"supportRequestCredential"})
-    public Credential supportRequestCredential(SupportRequestProperties supportRequestProperties) {
-        List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
-        return GoogleCredential.fromStream(new FileInputStream(supportRequestProperties.getCredentialPath()))
-                .createScoped(SCOPES);
-    }
-
     @ConditionalOnProperty(value = "devservice.email.autoResponseEnabled", havingValue = "true")
     @Bean("autoResponseEmailBody")
     public String autoResponseEmailBody(EmailProperties emailProperties) throws IOException {
@@ -146,7 +138,7 @@ public class DevServiceConfiguration {
     }
 
     @Bean
-    public SupportRequestService supportRequestService(@Qualifier("supportRequestCredential") Credential credential,
+    public SupportRequestService supportRequestService(@Qualifier("credential") Credential credential,
                                                        SupportRequestRepository supportRequestRepository,
                                                        SupportRequestProperties supportRequestProperties) {
         return new SupportRequestService(credential, supportRequestRepository, supportRequestProperties);

@@ -55,7 +55,7 @@ public class BridgeUserJourneyTest {
     @MockBean
     private Authenticator authenticator;
 
-    @Qualifier("supportRequestCredential")
+    @Qualifier("credential")
     @MockBean
     private Credential credential;
 
