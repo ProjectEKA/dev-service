@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import static in.projecteka.devservice.clients.model.ErrorCode.BAD_REQUEST_FROM_GATEWAY;
 import static in.projecteka.devservice.clients.model.ErrorCode.EMAIL_SERVICE_ERROR;
 import static in.projecteka.devservice.clients.model.ErrorCode.INVALID_TOKEN;
-import static in.projecteka.devservice.clients.model.ErrorCode.NO_SHEET_FOUND;
+import static in.projecteka.devservice.clients.model.ErrorCode.READ_SPREADSHEET_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -46,9 +46,8 @@ public class ClientError extends Throwable {
 
     }
 
-    public static ClientError noSheetFound() {
+    public static ClientError spreadsheetReadingFailed() {
         return new ClientError(BAD_REQUEST,
-                new ErrorRepresentation(new Error(NO_SHEET_FOUND, "No Sheet Found")));
-
+                new ErrorRepresentation(new Error(READ_SPREADSHEET_ERROR, "Cannot read the sheet")));
     }
 }

@@ -3,7 +3,6 @@ package in.projecteka.devservice.support;
 import com.google.api.client.auth.oauth2.Credential;
 import com.nimbusds.jose.jwk.JWKSet;
 import in.projecteka.devservice.clients.ClientError;
-import in.projecteka.devservice.common.Constants;
 import in.projecteka.devservice.support.model.ApprovedRequestsSheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,7 +75,7 @@ class SupportRequestControllerTest {
         ApprovedRequestsSheet request = ApprovedRequestsSheet.builder().sheetName(currentDate).build();
 
         when(supportRequestService.processRequest(any(ApprovedRequestsSheet.class)))
-                .thenReturn(Mono.error(ClientError.noSheetFound()));
+                .thenReturn(Mono.error(ClientError.spreadsheetReadingFailed()));
 
         webClient.post()
                 .uri(PATH_SUPPORT_REQUEST)

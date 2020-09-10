@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 import static in.projecteka.devservice.common.Constants.PATH_SUPPORT_REQUEST;
 
@@ -20,7 +18,7 @@ public class SupportRequestController {
     private final SupportRequestService supportRequestService;
 
     @PostMapping(PATH_SUPPORT_REQUEST)
-    public Mono<Void> bridgeEntry(@Valid @RequestBody ApprovedRequestsSheet approvedRequestsSheet) throws GeneralSecurityException, IOException {
+    public Mono<Void> bridgeEntry(@Valid @RequestBody ApprovedRequestsSheet approvedRequestsSheet) {
         return supportRequestService.processRequest(approvedRequestsSheet);
     }
 }

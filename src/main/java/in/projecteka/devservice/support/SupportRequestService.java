@@ -8,7 +8,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
-import in.projecteka.devservice.clients.ClientError;
 import in.projecteka.devservice.support.model.ApprovedRequestsSheet;
 import in.projecteka.devservice.support.model.SupportRequest;
 import in.projecteka.devservice.support.model.SupportRequestProperties;
@@ -17,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
+
+import static in.projecteka.devservice.clients.ClientError.spreadsheetReadingFailed;
 
 @AllArgsConstructor
 public class SupportRequestService {
@@ -31,9 +30,9 @@ public class SupportRequestService {
     private static final Logger logger = LoggerFactory.getLogger(SupportRequestService.class);
 
 
-    public Mono<Void> processRequest(ApprovedRequestsSheet approvedRequestsSheet) throws GeneralSecurityException, IOException {
+    public Mono<Void> processRequest(ApprovedRequestsSheet approvedRequestsSheet)  {
         return readSpreadSheet(approvedRequestsSheet)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(ClientError.noSheetFound())))
+                .switchIfEmpty(Mono.defer(() -> Mono.error(spreadsheetReadingFailed())))
                 .flatMap(readResult -> {
                     for (var row : readResult.getValueRanges().get(0).getValues()) {
                         SupportRequest supportRequest = getSupportRequest(row);
@@ -54,7 +53,7 @@ public class SupportRequestService {
                 .build();
     }
 
-    private Mono<BatchGetValuesResponse> readSpreadSheet(ApprovedRequestsSheet approvedRequestsSheet) throws IOException, GeneralSecurityException {
+    private Mono<BatchGetValuesResponse> readSpreadSheet(ApprovedRequestsSheet approvedRequestsSheet) {
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
@@ -66,6 +65,9 @@ public class SupportRequestService {
                     .execute());
         } catch (GoogleJsonResponseException exception) {
             logger.error("No sheet with name `" + approvedRequestsSheet.getSheetName() + "' found.");
+            return Mono.empty();
+        } catch (Exception exception) {
+            logger.error("Error occurred --> " + exception);
             return Mono.empty();
         }
     }
