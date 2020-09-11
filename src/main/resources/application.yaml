@@ -1,5 +1,6 @@
 server:
   port: 9090
+  forward-headers-strategy: ${FORWARD-HEADER-STRATEGY:NATIVE}
 devservice:
   keycloak:
     jwkUrl: ${KEY_CLOAK_JWK_URL}
