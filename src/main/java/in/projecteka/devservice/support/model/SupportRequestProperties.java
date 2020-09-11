@@ -11,5 +11,4 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConstructorBinding
 public class SupportRequestProperties {
     private final String spreadsheetId;
-    private final String credentialPath;
 }
