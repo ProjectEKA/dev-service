@@ -1,5 +1,6 @@
 package in.projecteka.devservice.bridge;
 
+import com.google.api.client.auth.oauth2.Credential;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
 import in.projecteka.devservice.bridge.model.ServiceType;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 

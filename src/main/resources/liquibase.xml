@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="202009081407" author="Sangita/Aditi" context="v1">
+        <preConditions>
+            <not>
+                <tableExists tableName="support_requests"/>
+            </not>
+        </preConditions>
+        <comment>Add support_requests table</comment>
+
+        <createTable tableName="support_requests">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(50)">
+            </column>
+            <column name="organization_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expected_roles" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

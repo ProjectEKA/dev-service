@@ -1,5 +1,6 @@
 package in.projecteka.devservice.bridge;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.nimbusds.jose.jwk.JWKSet;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
@@ -11,6 +12,7 @@ import in.projecteka.devservice.common.Caller;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -52,6 +54,10 @@ public class BridgeUserJourneyTest {
     GatewayServiceProperties gatewayServiceProperties;
     @MockBean
     private Authenticator authenticator;
+
+    @Qualifier("credential")
+    @MockBean
+    private Credential credential;
 
     @Test
     void shouldUpdateBridgeUrl() {

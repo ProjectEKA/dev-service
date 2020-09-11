@@ -27,10 +27,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import static in.projecteka.devservice.clients.ClientError.unAuthorized;
-import static in.projecteka.devservice.common.Constants.PATH_BRIDGES;
 import static in.projecteka.devservice.common.Constants.PATH_EMAIL_SEND;
 import static in.projecteka.devservice.common.Constants.PATH_HEARTBEAT;
-import static in.projecteka.devservice.common.Constants.PATH_BRIDGE_SERVICES;
+import static in.projecteka.devservice.common.Constants.PATH_SUPPORT_REQUEST;
 import static org.springframework.util.StringUtils.hasText;
 import static reactor.core.publisher.Mono.error;
 
@@ -49,7 +48,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .logout().disable()
                 .authorizeExchange()
-                .pathMatchers(PATH_HEARTBEAT, PATH_EMAIL_SEND).permitAll().and()
+                .pathMatchers(PATH_HEARTBEAT, PATH_EMAIL_SEND, PATH_SUPPORT_REQUEST).permitAll().and()
                 .authorizeExchange()
                 .pathMatchers("/**")
                 .authenticated().and()

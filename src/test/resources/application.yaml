@@ -17,18 +17,19 @@ devservice:
     autoResponseBodyPath: /Users/some_user/Documents/emailbody.txt
     autoResponseSubject: Thanks
     autoResponseEnabled: false
+    allowedOrigin: false
   googleservice:
     credentialPath: /PATH/TO/CREDENTIALS
     sheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
     enabled: false
   support-requests:
-    spreadsheetId: ${SUPPORT_REQUESTS_SPREADSHEET_ID}
+    spreadsheetId: 1CWgChfwZCTtQAdMGi1k7T5-dM8K2pKtp-odJ4p7RxlM
   db:
     host: localhost
     port: 5432
-    schema: dev_service
-    user: postgres
-    password: password
+    schema: dev_service_test
+    user: dummy
+    password: pwd
     poolSize: 5
 spring:
   mail:
@@ -44,11 +45,12 @@ spring:
           auth: ${SMTP_AUTH:true}
   liquibase:
     change-log: classpath:liquibase.xml
+    enabled: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost:5432/dev_service"
-    username: postgres
-    password: password
+    url: "jdbc:postgresql://localhost:5432/dev_service_test"
+    username: dummy
+    password: pwd
 logging:
   level:
     liquibase: INFO
