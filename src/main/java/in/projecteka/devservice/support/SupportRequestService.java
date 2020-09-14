@@ -128,7 +128,7 @@ public class SupportRequestService {
                 .build();
     }
 
-    public static String getSHA(String input) throws NoSuchAlgorithmException {
+    private static String getSHA(String input) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         var hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
         BigInteger number = new BigInteger(1, hash);
