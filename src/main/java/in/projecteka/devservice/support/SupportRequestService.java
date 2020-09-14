@@ -29,28 +29,39 @@ public class SupportRequestService {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final Logger logger = LoggerFactory.getLogger(SupportRequestService.class);
 
-
-    public Mono<Void> processRequest(ApprovedRequestsSheet approvedRequestsSheet)  {
+    public Mono<Void> processRequest(ApprovedRequestsSheet approvedRequestsSheet) {
         return readSpreadSheet(approvedRequestsSheet)
                 .switchIfEmpty(Mono.defer(() -> Mono.error(spreadsheetReadingFailed())))
                 .flatMap(readResult -> {
+                    int rowNumber = 0;
                     for (var row : readResult.getValueRanges().get(0).getValues()) {
-                        SupportRequest supportRequest = getSupportRequest(row);
-                        supportRequestRepository.insert(supportRequest).subscribe();
+                        rowNumber++;
+                        if (rowNumber > 1) {
+                            SupportRequest supportRequest = getSupportRequest(row);
+                            if (supportRequest == null) {
+                                return Mono.error(spreadsheetReadingFailed());
+                            }
+                            supportRequestRepository.insert(supportRequest).subscribe();
+                        }
                     }
                     return Mono.empty();
                 });
     }
 
     private SupportRequest getSupportRequest(List<Object> row) {
-        return SupportRequest.builder()
-                .name(row.get(1).toString())
-                .emailId(row.get(2).toString())
-                .phoneNumber(row.get(3).toString())
-                .organizationName(row.get(4).toString())
-                .expectedRoles(row.get(7).toString())
-                .status(row.get(10).toString())
-                .build();
+        try {
+            return SupportRequest.builder()
+                    .name(row.get(1).toString())
+                    .emailId(row.get(2).toString())
+                    .phoneNumber(row.get(3).toString())
+                    .organizationName(row.get(4).toString())
+                    .expectedRoles(row.get(7).toString())
+                    .status(row.get(10).toString())
+                    .build();
+        } catch (Exception exception) {
+            logger.error("Error occurred --> " + exception);
+            return null;
+        }
     }
 
     private Mono<BatchGetValuesResponse> readSpreadSheet(ApprovedRequestsSheet approvedRequestsSheet) {
