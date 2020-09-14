@@ -2,6 +2,8 @@ package in.projecteka.devservice.clients;
 
 import in.projecteka.devservice.bridge.model.ServiceType;
 import in.projecteka.devservice.clients.model.Session;
+import in.projecteka.devservice.support.model.SupportBridgeRequest;
+import in.projecteka.devservice.support.model.SupportBridgeResponse;
 import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import static reactor.core.publisher.Mono.error;
 public class ServiceAuthenticationClient {
     private final Logger logger = LoggerFactory.getLogger(ServiceAuthenticationClient.class);
     private final WebClient webClient;
+    private final static String BEARER = "bearer ";
 
     public ServiceAuthenticationClient(WebClient.Builder webClient, String baseUrl) {
         this.webClient = webClient.baseUrl(baseUrl).build();
@@ -107,6 +110,27 @@ public class ServiceAuthenticationClient {
                 .then();
     }
 
+    public Mono<SupportBridgeResponse> getClientIdAndSecret(SupportBridgeRequest request, String token) {
+        return webClient.put()
+                .uri("/internal/bridges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, BEARER + token)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.value() == HttpStatus.BAD_REQUEST.value(),
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(unprocessableEntity())))
+                .onStatus(httpStatus -> httpStatus.value() == HttpStatus.UNAUTHORIZED.value(),
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(unAuthorized())))
+                .onStatus(HttpStatus::is5xxServerError,
+                        clientResponse -> clientResponse.bodyToMono(Properties.class)
+                                .doOnNext(properties -> logger.error(properties.toString()))
+                                .then(error(networkServiceCallFailed())))
+                .bodyToMono(SupportBridgeResponse.class);
+    }
 
     @Value
     private static class BridgeServiceRequest {

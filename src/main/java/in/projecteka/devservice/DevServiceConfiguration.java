@@ -140,8 +140,11 @@ public class DevServiceConfiguration {
     @Bean
     public SupportRequestService supportRequestService(@Qualifier("credential") Credential credential,
                                                        SupportRequestRepository supportRequestRepository,
-                                                       SupportRequestProperties supportRequestProperties) {
-        return new SupportRequestService(credential, supportRequestRepository, supportRequestProperties);
+                                                       SupportRequestProperties supportRequestProperties,
+                                                       ServiceAuthenticationClient serviceAuthenticationClient,
+                                                       GatewayServiceProperties gatewayServiceProperties) {
+        return new SupportRequestService(credential, supportRequestRepository, supportRequestProperties,
+                serviceAuthenticationClient, gatewayServiceProperties);
     }
 
     @Bean("pgPoolClient")
