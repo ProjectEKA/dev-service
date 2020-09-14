@@ -107,11 +107,11 @@ public class SupportRequestService {
         return Mono.zip(supportRequest, session)
                 .flatMap(tuple -> {
                     try {
-                        String hash = getSHA(tuple.getT1().getExpectedRoles() + tuple.getT1().getSupportRequestId());
+                        String hash = getSHA(tuple.getT1().getEmailId() + tuple.getT1().getSupportRequestId());
                         var clientId = hash.substring(0, 7);
                         var supportBridgeRequest = createSupportBridgeRequest(tuple.getT1(), clientId);
                         return serviceAuthenticationClient.getClientIdAndSecret(supportBridgeRequest, tuple.getT2().getAccessToken());
-                    } catch (NoSuchAlgorithmException e) {
+                    } catch (Exception e) {
                         logger.error("Error while creating hash");
                         return Mono.error(networkServiceCallFailed());
                     }
@@ -129,10 +129,10 @@ public class SupportRequestService {
     }
 
     private static String getSHA(String input) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        var md = MessageDigest.getInstance("SHA-256");
         var hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
-        BigInteger number = new BigInteger(1, hash);
-        StringBuilder hexString = new StringBuilder(number.toString(16));
+        var number = new BigInteger(1, hash);
+        var hexString = new StringBuilder(number.toString(16));
         while (hexString.length() < 32) {
             hexString.insert(0, '0');
         }

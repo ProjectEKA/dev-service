@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import static in.projecteka.devservice.clients.model.ErrorCode.BAD_REQUEST_FROM_GATEWAY;
 import static in.projecteka.devservice.clients.model.ErrorCode.EMAIL_SERVICE_ERROR;
 import static in.projecteka.devservice.clients.model.ErrorCode.INVALID_TOKEN;
+import static in.projecteka.devservice.clients.model.ErrorCode.NETWORK_SERVICE_ERROR;
 import static in.projecteka.devservice.clients.model.ErrorCode.READ_SPREADSHEET_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -32,7 +33,7 @@ public class ClientError extends Throwable {
 
     public static ClientError networkServiceCallFailed() {
         return new ClientError(INTERNAL_SERVER_ERROR,
-                new ErrorRepresentation(new Error(EMAIL_SERVICE_ERROR, CANNOT_PROCESS_REQUEST_TRY_LATER)));
+                new ErrorRepresentation(new Error(NETWORK_SERVICE_ERROR, CANNOT_PROCESS_REQUEST_TRY_LATER)));
     }
 
     public static ClientError emailSendingFailed() {
