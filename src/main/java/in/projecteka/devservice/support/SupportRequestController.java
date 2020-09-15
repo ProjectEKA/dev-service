@@ -26,7 +26,7 @@ public class SupportRequestController {
     }
 
     @PostMapping(INTERNAL_GENERATE_ID_AND_SECRET)
-    public Mono<SupportBridgeResponse> getKeyAndSecret(@RequestBody CredentialRequest credentialRequest) {
+    public Mono<SupportBridgeResponse> generateCredentials(@RequestBody CredentialRequest credentialRequest) {
         return supportRequestService.generateIdAndSecret(credentialRequest);
     }
 }
