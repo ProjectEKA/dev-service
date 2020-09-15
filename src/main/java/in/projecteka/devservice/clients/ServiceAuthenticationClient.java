@@ -110,7 +110,7 @@ public class ServiceAuthenticationClient {
                 .then();
     }
 
-    public Mono<SupportBridgeResponse> getClientIdAndSecret(SupportBridgeRequest request, String token) {
+    public Mono<SupportBridgeResponse> generateClientIdAndSecret(SupportBridgeRequest request, String token) {
         return webClient.put()
                 .uri("/internal/bridges")
                 .contentType(MediaType.APPLICATION_JSON)

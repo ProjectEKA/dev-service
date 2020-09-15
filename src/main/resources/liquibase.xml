@@ -31,18 +31,15 @@
             <column name="status" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-        </createTable>
-    </changeSet>
-    <changeSet id="202009140505" author="Neeraj/Aditi">
-        <addColumn tableName="support_requests">
             <column name="support_request_id" type="VARCHAR(50)">
                 <constraints unique="true" nullable="false"/>
             </column>
             <column name="date_created" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="date_modified" type="DATETIME">
+            <column name="date_modified" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
             </column>
-        </addColumn>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -8,6 +8,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
+import in.projecteka.devservice.clients.ClientError;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import in.projecteka.devservice.support.model.ApprovedRequestsSheet;
@@ -100,7 +101,8 @@ public class SupportRequestService {
     }
 
     public Mono<SupportBridgeResponse> generateIdAndSecret(CredentialRequest credentialRequest) {
-        var supportRequest = supportRequestRepository.getSupportRequest(credentialRequest.getRequestId());
+        var supportRequest = supportRequestRepository.getSupportRequest(credentialRequest.getRequestId())
+                .switchIfEmpty(Mono.error(ClientError.unprocessableEntity()));
         var session = serviceAuthenticationClient.getTokenFor(gatewayServiceProperties.getUsername(),
                 gatewayServiceProperties.getPassword());
 
@@ -110,7 +112,7 @@ public class SupportRequestService {
                         String hash = getSHA(tuple.getT1().getEmailId() + tuple.getT1().getSupportRequestId());
                         var clientId = hash.substring(0, 7);
                         var supportBridgeRequest = createSupportBridgeRequest(tuple.getT1(), clientId);
-                        return serviceAuthenticationClient.getClientIdAndSecret(supportBridgeRequest, tuple.getT2().getAccessToken());
+                        return serviceAuthenticationClient.generateClientIdAndSecret(supportBridgeRequest, tuple.getT2().getAccessToken());
                     } catch (Exception e) {
                         logger.error("Error while creating hash");
                         return Mono.error(networkServiceCallFailed());
@@ -129,8 +131,8 @@ public class SupportRequestService {
     }
 
     private static String getSHA(String input) throws NoSuchAlgorithmException {
-        var md = MessageDigest.getInstance("SHA-256");
-        var hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
+        var messageDigest = MessageDigest.getInstance("SHA-256");
+        var hash = messageDigest.digest(input.getBytes(StandardCharsets.UTF_8));
         var number = new BigInteger(1, hash);
         var hexString = new StringBuilder(number.toString(16));
         while (hexString.length() < 32) {

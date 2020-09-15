@@ -66,7 +66,7 @@ class SupportRequestServiceTest {
 
         when(supportRequestRepository.getSupportRequest(credentialRequest.getRequestId())).thenReturn(Mono.just(supportRequest));
         when(serviceAuthenticationClient.getTokenFor(username, password)).thenReturn(Mono.just(session));
-        when(serviceAuthenticationClient.getClientIdAndSecret(any(SupportBridgeRequest.class), anyString()))
+        when(serviceAuthenticationClient.generateClientIdAndSecret(any(SupportBridgeRequest.class), anyString()))
                 .thenReturn(Mono.just(supportBridgeResponse));
         when(gatewayServiceProperties.getUsername()).thenReturn(username);
         when(gatewayServiceProperties.getPassword()).thenReturn(password);
@@ -76,7 +76,7 @@ class SupportRequestServiceTest {
                 .verifyComplete();
 
         verify(serviceAuthenticationClient).getTokenFor(username, password);
-        verify(serviceAuthenticationClient).getClientIdAndSecret(any(SupportBridgeRequest.class), anyString());
+        verify(serviceAuthenticationClient).generateClientIdAndSecret(any(SupportBridgeRequest.class), anyString());
         verify(supportRequestRepository).getSupportRequest(anyString());
     }
 
@@ -91,7 +91,7 @@ class SupportRequestServiceTest {
 
         when(supportRequestRepository.getSupportRequest(credentialRequest.getRequestId())).thenReturn(Mono.just(supportRequest));
         when(serviceAuthenticationClient.getTokenFor(username, password)).thenReturn(Mono.just(session));
-        when(serviceAuthenticationClient.getClientIdAndSecret(any(SupportBridgeRequest.class), anyString()))
+        when(serviceAuthenticationClient.generateClientIdAndSecret(any(SupportBridgeRequest.class), anyString()))
                 .thenReturn(Mono.error(ClientError.unprocessableEntity()));
         when(gatewayServiceProperties.getUsername()).thenReturn(username);
         when(gatewayServiceProperties.getPassword()).thenReturn(password);
@@ -101,7 +101,7 @@ class SupportRequestServiceTest {
                         ((ClientError) throwable).getHttpStatus().value() == 400);
 
         verify(serviceAuthenticationClient).getTokenFor(username, password);
-        verify(serviceAuthenticationClient).getClientIdAndSecret(any(SupportBridgeRequest.class), anyString());
+        verify(serviceAuthenticationClient).generateClientIdAndSecret(any(SupportBridgeRequest.class), anyString());
         verify(supportRequestRepository).getSupportRequest(anyString());
     }
 }
