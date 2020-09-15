@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import static in.projecteka.devservice.clients.ClientError.unAuthorized;
+import static in.projecteka.devservice.common.Constants.INTERNAL_GENERATE_ID_AND_SECRET;
 import static in.projecteka.devservice.common.Constants.PATH_EMAIL_SEND;
 import static in.projecteka.devservice.common.Constants.PATH_HEARTBEAT;
 import static in.projecteka.devservice.common.Constants.PATH_SUPPORT_REQUEST;
@@ -48,7 +49,8 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .logout().disable()
                 .authorizeExchange()
-                .pathMatchers(PATH_HEARTBEAT, PATH_EMAIL_SEND, PATH_SUPPORT_REQUEST).permitAll().and()
+                .pathMatchers(PATH_HEARTBEAT, PATH_EMAIL_SEND, PATH_SUPPORT_REQUEST, INTERNAL_GENERATE_ID_AND_SECRET)
+                .permitAll().and()
                 .authorizeExchange()
                 .pathMatchers("/**")
                 .authenticated().and()
