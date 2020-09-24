@@ -39,6 +39,12 @@ dependencies {
     }
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.jeasy:easy-random-core:4.2.0'
+    compile 'com.google.auth:google-auth-library-oauth2-http:0.21.1'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
+    implementation 'org.liquibase:liquibase-core:4.0.0'
+    implementation('org.postgresql:postgresql')
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.3.2.RELEASE'
+    implementation 'io.vertx:vertx-pg-client:3.9.2'
 }
 
 test {

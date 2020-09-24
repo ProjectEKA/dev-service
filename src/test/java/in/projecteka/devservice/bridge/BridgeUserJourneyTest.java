@@ -1,9 +1,9 @@
 package in.projecteka.devservice.bridge;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.nimbusds.jose.jwk.JWKSet;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
-import in.projecteka.devservice.bridge.model.ServiceType;
 import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
@@ -12,6 +12,7 @@ import in.projecteka.devservice.common.Caller;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,11 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
-import java.awt.*;
-import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.List;
 
 import static in.projecteka.devservice.bridge.TestBuilders.bridgeRequest;
 import static in.projecteka.devservice.bridge.TestBuilders.session;
@@ -57,6 +54,10 @@ public class BridgeUserJourneyTest {
     GatewayServiceProperties gatewayServiceProperties;
     @MockBean
     private Authenticator authenticator;
+
+    @Qualifier("credential")
+    @MockBean
+    private Credential credential;
 
     @Test
     void shouldUpdateBridgeUrl() {
@@ -105,7 +106,8 @@ public class BridgeUserJourneyTest {
                 .id(request.getId())
                 .name(request.getName())
                 .city(request.getCity())
-                .orgAlias(request.getAlias()).build();
+                .orgAlias(request.getAlias())
+                .serviceType(request.getType()).build();
 
         when(authenticator.verify(token)).thenReturn(just(caller));
         when(gatewayServiceProperties.getUsername()).thenReturn(username);

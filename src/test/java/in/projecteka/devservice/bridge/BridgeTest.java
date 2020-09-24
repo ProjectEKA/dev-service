@@ -1,5 +1,6 @@
 package in.projecteka.devservice.bridge;
 
+import com.google.api.client.auth.oauth2.Credential;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
 import in.projecteka.devservice.bridge.model.ServiceType;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -87,7 +90,8 @@ public class BridgeTest {
                 .id(request.getId())
                 .name(request.getName())
                 .city(request.getCity())
-                .orgAlias(request.getAlias()).build();
+                .orgAlias(request.getAlias())
+                .serviceType(request.getType()).build();
 
         when(gatewayServiceProperties.getUsername()).thenReturn(username);
         when(gatewayServiceProperties.getPassword()).thenReturn(password);

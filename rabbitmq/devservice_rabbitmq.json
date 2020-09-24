@@ -1,0 +1,44 @@
+{
+  "exchanges": [
+    {
+      "name": "dev-service.exchange",
+      "type": "direct",
+      "arguments": {}
+    },
+    {
+      "name": "dev-service-dead-letter-exchange",
+      "type": "topic",
+      "arguments": {}
+    },
+    {
+      "name": "dev-service-parking.exchange",
+      "type": "topic",
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "dev-service-dead-letter-queue",
+      "routing_key": "#",
+      "exchange": "dev-service-dead-letter-exchange",
+      "arguments": {
+        "x-dead-letter-exchange": "dev-service-exchange",
+        "x-message-ttl": 1000
+      }
+    },
+    {
+      "name": "dev-service-parking.queue",
+      "routing_key": "#",
+      "exchange": "dev-service-parking.exchange",
+      "arguments": {}
+    },
+    {
+      "name": "support-request-queue",
+      "routing_key": "support-request-queue",
+      "exchange": "dev-service.exchange",
+      "arguments": {
+        "x-dead-letter-exchange": "dev-service-dead-letter-exchange"
+      }
+    }
+  ]
+}

@@ -14,4 +14,7 @@ public class EmailProperties {
     private String sender;
     private String receiver;
     private String subject;
+    private String autoResponseBodyPath;
+    private String autoResponseSubject;
+    private boolean autoResponseEnabled;
 }

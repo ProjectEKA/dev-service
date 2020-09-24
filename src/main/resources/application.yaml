@@ -1,5 +1,6 @@
 server:
   port: 9090
+  forward-headers-strategy: ${FORWARD-HEADER-STRATEGY:NATIVE}
 devservice:
   keycloak:
     jwkUrl: ${KEY_CLOAK_JWK_URL}
@@ -14,6 +15,23 @@ devservice:
     sender: ${EMAIL_SENDER}
     receiver: ${EMAIL_RECEIVER}
     subject: ${EMAIL_SUBJECT}
+    allowedOrigin: ${ALLOWED_ORIGIN_HOST:*}
+    autoResponseBodyPath: ${AUTO_RESPONSE_BODY_PATH}
+    autoResponseSubject: ${AUTO_RESPONSE_SUBJECT}
+    autoResponseEnabled: ${AUTO_RESPONSE_ENABLED:false}
+  googleservice:
+    credentialPath: ${GOOGLE_SERVICE_CREDENTIAL_PATH}
+    sheetId: ${GOOGLE_SERVICE_SHEET_ID}
+    enabled: ${GOOGLE_SERVICE_ENABLED:false}
+  support-requests:
+    spreadsheetId: ${SUPPORT_REQUESTS_SPREADSHEET_ID}
+  db:
+    host: ${POSTGRES_HOST}
+    port: ${POSTGRES_PORT:5432}
+    schema: ${DEV_SERVICE_DB_NAME}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    poolSize: ${MASTER_POOL_SIZE:5}
 spring:
   mail:
     host: ${SMTP_HOST:smtp.mailtrap.io}
@@ -26,3 +44,13 @@ spring:
       mail:
         smtp:
           auth: ${SMTP_AUTH:true}
+  liquibase:
+    change-log: ${DEV_SERVICE_LIQUIBASE_PATH:classpath:liquibase.xml}
+  datasource:
+    driver-class-name: ${DEV_SERVICE_DRIVER_CLASSNAME:org.postgresql.Driver}
+    url: ${DEV_SERVICE_JDBC_URL:jdbc:postgresql://localhost:5432/dev_service}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:password}
+logging:
+  level:
+    liquibase: INFO

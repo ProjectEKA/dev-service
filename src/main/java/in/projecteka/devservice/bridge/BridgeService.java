@@ -35,6 +35,7 @@ public class BridgeService {
                             .name(request.getName())
                             .orgAlias(request.getAlias())
                             .city(getCity(request))
+                            .serviceType(request.getType())
                             .build();
 
                     return serviceAuthenticationClient.upsertBridgeServiceEntry(
