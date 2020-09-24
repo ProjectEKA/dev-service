@@ -51,4 +51,12 @@ public class ClientError extends Throwable {
         return new ClientError(BAD_REQUEST,
                 new ErrorRepresentation(new Error(READ_SPREADSHEET_ERROR, "Cannot read the sheet")));
     }
+    public static ClientError invalidServiceType() {
+        return new ClientError(BAD_REQUEST,
+                new ErrorRepresentation(new Error(BAD_REQUEST_FROM_GATEWAY, "Invalid service type")));
+
+    }
+
+
+
 }

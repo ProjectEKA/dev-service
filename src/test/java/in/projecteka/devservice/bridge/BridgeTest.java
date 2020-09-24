@@ -1,25 +1,24 @@
 package in.projecteka.devservice.bridge;
 
-import com.google.api.client.auth.oauth2.Credential;
 import in.projecteka.devservice.bridge.model.BridgeServiceRequest;
 import in.projecteka.devservice.bridge.model.OrganizationDetails;
-import in.projecteka.devservice.bridge.model.ServiceType;
+import in.projecteka.devservice.clients.ClientError;
 import in.projecteka.devservice.clients.ClientRegistryClient;
 import in.projecteka.devservice.clients.ServiceAuthenticationClient;
+import in.projecteka.devservice.clients.model.ErrorCode;
 import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static in.projecteka.devservice.bridge.TestBuilders.bridgeRequest;
 import static in.projecteka.devservice.bridge.TestBuilders.session;
 import static in.projecteka.devservice.bridge.TestBuilders.string;
+import static in.projecteka.devservice.bridge.model.ServiceType.INVALID_TYPE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static reactor.core.publisher.Mono.just;
@@ -81,7 +80,7 @@ public class BridgeTest {
                 .city(string())
                 .id(string())
                 .name(string())
-                .type(ServiceType.HIP)
+                .type(INVALID_TYPE)
                 .build();
         var orgDetails = OrganizationDetails.builder()
                 .id(request.getId())
@@ -98,13 +97,10 @@ public class BridgeTest {
         )).thenReturn(Mono.empty());
         when(clientRegistryClient.addOrganization(orgDetails)).thenReturn(Mono.empty());
 
-        StepVerifier.create(bridgeService.upsertBridgeServiceEntry(bridgeId, request)).verifyComplete();
-
-        verify(serviceAuthenticationClient).getTokenFor(username, password);
-        verify(serviceAuthenticationClient).upsertBridgeServiceEntry(
-                bridgeId, request.getId(), request.getName(), request.getType(), request.isActive(), session
-        );
-        verify(clientRegistryClient).addOrganization(orgDetails);
+        StepVerifier.create(bridgeService.upsertBridgeServiceEntry(bridgeId, request))
+                .expectErrorMatches(throwable -> throwable instanceof ClientError &&
+                        ((ClientError) throwable).getError().getError().getCode().equals(ErrorCode.BAD_REQUEST_FROM_GATEWAY))
+                .verify();
 
     }
 }
