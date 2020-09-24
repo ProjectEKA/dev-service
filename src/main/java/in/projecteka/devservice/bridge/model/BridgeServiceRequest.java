@@ -17,7 +17,7 @@ public class BridgeServiceRequest {
     @NotNull(message = "service name alias can't be empty")
     List<String> alias;
     String city;
-    @NotBlank(message = "service type can't be empty")
+    @NotNull(message = "service type can't be empty")
     ServiceType type;
     boolean active;
 }
