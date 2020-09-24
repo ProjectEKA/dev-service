@@ -11,8 +11,6 @@ import in.projecteka.devservice.clients.properties.GatewayServiceProperties;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
-import java.net.Authenticator;
-
 @AllArgsConstructor
 public class BridgeService {
     private final ServiceAuthenticationClient serviceAuthenticationClient;
