@@ -19,5 +19,6 @@ public class BridgeServiceRequest {
     String city;
     @NotNull(message = "service type can't be empty")
     ServiceType type;
+    List<Endpoint> endpoints;
     boolean active;
 }

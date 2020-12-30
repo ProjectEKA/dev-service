@@ -22,8 +22,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static in.projecteka.devservice.bridge.TestBuilders.bridgeRequest;
+import static in.projecteka.devservice.bridge.TestBuilders.endpoint;
 import static in.projecteka.devservice.bridge.TestBuilders.session;
 import static in.projecteka.devservice.bridge.TestBuilders.string;
 import static in.projecteka.devservice.bridge.model.ServiceType.HIP;
@@ -101,6 +103,7 @@ public class BridgeUserJourneyTest {
                 .type(HIP)
                 .city("random")
                 .alias(alias)
+                .endpoints(List.of(endpoint().build()))
                 .name("hospital_name").build();
         var orgDetails = OrganizationDetails.builder()
                 .id(request.getId())
@@ -114,7 +117,7 @@ public class BridgeUserJourneyTest {
         when(gatewayServiceProperties.getPassword()).thenReturn(password);
         when(serviceAuthenticationClient.getTokenFor(username, password)).thenReturn(just(session));
         when(serviceAuthenticationClient.upsertBridgeServiceEntry(
-                bridgeId, request.getId(), request.getName(), request.getType(), request.isActive(), session
+                bridgeId, request.getId(), request.getName(), request.getType(), request.getEndpoints(), request.isActive(), session
         )).thenReturn(Mono.empty());
         when(clientRegistryClient.addOrganization(orgDetails)).thenReturn(Mono.empty());
 

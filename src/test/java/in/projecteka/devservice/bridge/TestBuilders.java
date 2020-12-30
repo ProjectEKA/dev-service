@@ -1,6 +1,7 @@
 package in.projecteka.devservice.bridge;
 
 import in.projecteka.devservice.bridge.model.BridgeRequest;
+import in.projecteka.devservice.bridge.model.Endpoint;
 import in.projecteka.devservice.clients.model.Session;
 import in.projecteka.devservice.support.model.CredentialRequest;
 import in.projecteka.devservice.support.model.SupportBridgeResponse;
@@ -33,5 +34,9 @@ public class TestBuilders {
 
     public static CredentialRequest.CredentialRequestBuilder credentialRequest() {
         return easyRandom.nextObject(CredentialRequest.CredentialRequestBuilder.class);
+    }
+
+    public static Endpoint.EndpointBuilder endpoint() {
+        return easyRandom.nextObject(Endpoint.EndpointBuilder.class);
     }
 }
