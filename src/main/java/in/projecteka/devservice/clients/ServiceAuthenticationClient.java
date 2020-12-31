@@ -1,5 +1,6 @@
 package in.projecteka.devservice.clients;
 
+import in.projecteka.devservice.bridge.model.Endpoint;
 import in.projecteka.devservice.bridge.model.ServiceType;
 import in.projecteka.devservice.clients.model.Session;
 import in.projecteka.devservice.support.model.SupportBridgeRequest;
@@ -79,19 +80,19 @@ public class ServiceAuthenticationClient {
                 .then();
     }
 
-    private BridgeServiceRequest bridgeServiceRequest(String id, String name, ServiceType type, boolean active) {
-        return new BridgeServiceRequest(id, name, type, active);
+    private BridgeServiceRequest bridgeServiceRequest(String id, String name, ServiceType type, List<Endpoint> endpoints, boolean active) {
+        return new BridgeServiceRequest(id, name, type, endpoints, active);
     }
 
     public Mono<Void> upsertBridgeServiceEntry(String bridgeId, String id,
                                                String name, ServiceType type,
-                                               boolean active, Session session
+                                               List<Endpoint> endpoints, boolean active, Session session
     ) {
         return webClient.put()
                 .uri(format("/internal/bridges/%s/services", bridgeId))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, format("%s %s", session.getTokenType(), session.getAccessToken()))
-                .body(Mono.just(List.of(bridgeServiceRequest(id, name, type, active))), BridgeServiceRequest.class)
+                .body(Mono.just(List.of(bridgeServiceRequest(id, name, type, endpoints, active))), BridgeServiceRequest.class)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.BAD_REQUEST.value(),
                         clientResponse -> clientResponse.bodyToMono(Properties.class)
@@ -137,6 +138,7 @@ public class ServiceAuthenticationClient {
         String id;
         String name;
         ServiceType type;
+        List<Endpoint> endpoints;
         boolean active;
     }
 

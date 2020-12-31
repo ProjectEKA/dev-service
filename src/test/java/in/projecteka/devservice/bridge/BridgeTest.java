@@ -93,7 +93,7 @@ public class BridgeTest {
         when(gatewayServiceProperties.getPassword()).thenReturn(password);
         when(serviceAuthenticationClient.getTokenFor(username, password)).thenReturn(just(session));
         when(serviceAuthenticationClient.upsertBridgeServiceEntry(
-                bridgeId, request.getId(), request.getName(), request.getType(), request.isActive(), session
+                bridgeId, request.getId(), request.getName(), request.getType(), request.getEndpoints(), request.isActive(), session
         )).thenReturn(Mono.empty());
         when(clientRegistryClient.addOrganization(orgDetails)).thenReturn(Mono.empty());
 
